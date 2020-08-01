@@ -39,7 +39,6 @@ class Comments extends Component
     {
         $this->validate(['newComment'   => 'required|max:255']);
         $image = $this->storeImage();
-        $this->storeImage();
         $createdComment = Comment::create([
             'body'=>$this->newComment, 
             'image'=> $image,
@@ -66,6 +65,7 @@ class Comments extends Component
     public function remove($commentId)
     {
         $comment=Comment::find($commentId);
+        Storage::disk('public')->delete($comment->image);
         if($comment != null){
             $comment->delete();
             // $this->comments = $this->comments->except($commentId);
