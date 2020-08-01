@@ -2,6 +2,7 @@
 
 use Illuminate\Support\Facades\Route;
 use App\Model\Comment;
+use GuzzleHttp\Middleware;
 
 /*
 |--------------------------------------------------------------------------
@@ -17,5 +18,12 @@ use App\Model\Comment;
 // Route::get('/', function () {
 //     return view('welcome');
 // });
-Route::livewire('/', 'home');
-Route::livewire('/login', 'login');
+Route::livewire('/', 'home')->name('home')->middleware('auth');
+
+Route::group(['middleware'=>'guest'], function(){
+    Route::livewire('/login', 'login')->name('login');
+    Route::livewire('/register', 'register');
+});
+
+
+
