@@ -14,6 +14,7 @@ use App\Model\Comment;
 |
 */
 
-Route::get('/', function () {
-    return view('welcome');
-});
+// Route::get('/', function () {
+//     return view('welcome');
+// });
+Route::livewire('/', 'home');

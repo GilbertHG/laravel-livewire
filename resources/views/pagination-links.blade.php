@@ -1,71 +1,36 @@
-{{-- @if ($paginator->hasPages())
-    <ul class="flex justify-between">
-        @if ($paginator->onFirstPage())
-            <li class="w-16 px-2 py-1 text-center rounded border bg-gray-100">Prev</li>
-        @else
-            <li class="w-16 px-2 py-1 text-center rounded border shadow bg-white cursor-pointer" wire:click="previousPage">Prev</li>
-        @endif
-        @if($paginator->hasMorePages())
-            <li class="w-16 px-2 py-1 text-center rounded border shadow bg-white cursor-pointer" wire:click="nextPage">Next</li>
-        @else
-            <li class="w-16 px-2 py-1 text-center rounded border bg-gray-200" >Next</li>    
-        @endif
-    </ul>
-@endif --}}
-
 @if ($paginator->hasPages())
-    <ul class="flex justify-between" role="navigation">
-        {{-- Previous Page Link --}}
-        @if ($paginator->onFirstPage())
-            <li class="page-item disabled" aria-disabled="true" aria-label="@lang('pagination.previous')">
-                <span class="page-link" aria-hidden="true">
-                    <span class="d-none d-md-block">&lsaquo;</span>
-                    <span class="d-block d-md-none">@lang('pagination.previous')</span>
-                </span>
-            </li>
+<ul class="flex justify-between">
+    <!-- prev -->
+    @if ($paginator->onFirstPage())
+    <li class="w-16 px-2 py-1 text-center rounded border bg-gray-200">Prev</li>
+    @else
+    <li class="w-16 px-2 py-1 text-center rounded border shadow bg-white cursor-pointer" wire:click="previousPage">Prev</li>
+    @endif
+    <!-- prev end -->
+
+    <!-- numbers -->
+    @foreach ($elements as $element)
+    <div class="flex">
+        @if (is_array($element))
+        @foreach ($element as $page => $url)
+        @if ($page == $paginator->currentPage())
+        <li class="mx-2 w-10 px-2 py-1 text-center rounded border shadow bg-blue-500 text-white cursor-pointer" wire:click="gotoPage({{$page}})">{{$page}}</li>
         @else
-            <li class="page-item">
-                <button type="button" class="page-link" wire:click="previousPage" rel="prev" aria-label="@lang('pagination.previous')">
-                    <span class="d-none d-md-block">&lsaquo;</span>
-                    <span class="d-block d-md-none">@lang('pagination.previous')</span>
-                </button>
-            </li>
+        <li class="mx-2 w-10 px-2 py-1 text-center rounded border shadow bg-white cursor-pointer" wire:click="gotoPage({{$page}})">{{$page}}</li>
         @endif
-
-        {{-- Pagination Elements --}}
-        @foreach ($elements as $element)
-            {{-- "Three Dots" Separator --}}
-            @if (is_string($element))
-                <li class="page-item disabled d-none d-md-block" aria-disabled="true"><span class="page-link">{{ $element }}</span></li>
-            @endif
-
-            {{-- Array Of Links --}}
-            @if (is_array($element))
-                @foreach ($element as $page => $url)
-                    @if ($page == $paginator->currentPage())
-                        <li class="page-item active d-none d-md-block" aria-current="page"><span class="page-link">{{ $page }}</span></li>
-                    @else
-                        <li class="page-item d-none d-md-block"><button type="button" class="page-link" wire:click="gotoPage({{ $page }})">{{ $page }}</button></li>
-                    @endif
-                @endforeach
-            @endif
         @endforeach
-
-        {{-- Next Page Link --}}
-        @if ($paginator->hasMorePages())
-            <li class="page-item">
-                <button type="button" class="page-link" wire:click="nextPage" rel="next" aria-label="@lang('pagination.next')">
-                    <span class="d-block d-md-none">@lang('pagination.next')</span>
-                    <span class="d-none d-md-block">&rsaquo;</span>
-                </button>
-            </li>
-        @else
-            <li class="page-item disabled" aria-disabled="true" aria-label="@lang('pagination.next')">
-                <span class="page-link" aria-hidden="true">
-                    <span class="d-block d-md-none">@lang('pagination.next')</span>
-                    <span class="d-none d-md-block">&rsaquo;</span>
-                </span>
-            </li>
         @endif
-    </ul>
+    </div>
+    @endforeach
+    <!-- end numbers -->
+
+
+    <!-- next  -->
+    @if ($paginator->hasMorePages())
+    <li class="w-16 px-2 py-1 text-center rounded border shadow bg-white cursor-pointer" wire:click="nextPage">Next</li>
+    @else
+    <li class="w-16 px-2 py-1 text-center rounded border bg-gray-200">Next</li>
+    @endif
+    <!-- next end -->
+</ul>
 @endif
