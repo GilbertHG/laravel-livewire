@@ -18,3 +18,4 @@ use App\Model\Comment;
 //     return view('welcome');
 // });
 Route::livewire('/', 'home');
+Route::livewire('/login', 'login');
