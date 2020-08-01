@@ -5,7 +5,10 @@ namespace App\Http\Livewire;
 use Carbon\Carbon;
 use Livewire\Component;
 use App\Model\Comment;
+use Illuminate\Support\Facades\Storage;
 use Livewire\WithPagination;
+use Intervention\Image\ImageManagerStatic;
+use Illuminate\Support\Str;
 
 class Comments extends Component
 {
@@ -13,6 +16,12 @@ class Comments extends Component
     // public $comments;
 
     public $newComment;
+    public $image;
+    protected $listeners = ['fileUpload' => 'handleFileUpload'];
+
+    public function handleFileUpload($imageData){
+        $this->image = $imageData;
+    }
 
     // public function mount()
     // {
@@ -29,24 +38,40 @@ class Comments extends Component
     public function addComment()
     {
         $this->validate(['newComment'   => 'required|max:255']);
+        $image = $this->storeImage();
+        $this->storeImage();
         $createdComment = Comment::create([
             'body'=>$this->newComment, 
+            'image'=> $image,
             'user_id'=> 1
         ]);
         // $this->comments->prepend($createdComment);
         $this->newComment = "";
-
+        $this->image = "";
         session()->flash('message', 'Comment added successfully 😁');
+    }
+
+    public function storeImage()
+    {
+        if(!$this->image) {
+            return null;
+        }
+
+        $img = ImageManagerStatic::make($this->image)->encode('jpg');
+        $name = Str::random().".jpg";
+        Storage::disk('public')->put($name, $img);
+        return $name;
     }
 
     public function remove($commentId)
     {
         $comment=Comment::find($commentId);
-        $comment->delete();
-        // $this->comments = $this->comments->except($commentId);
-        session()->flash('message', 'Comment deleted successfully 😠');
-
-    }
+        if($comment != null){
+            $comment->delete();
+            // $this->comments = $this->comments->except($commentId);
+            session()->flash('message', 'Comment deleted successfully 😠');
+        }
+    }   
 
     public function render()
     {
