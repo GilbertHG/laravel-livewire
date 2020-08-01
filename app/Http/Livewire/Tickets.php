@@ -7,7 +7,7 @@ use Livewire\Component;
 
 class Tickets extends Component
 {
-    public $active;
+    public $active = 1;
 
     protected $listeners = ['ticketSelected'];
 
@@ -18,7 +18,7 @@ class Tickets extends Component
     public function render()
     {
         return view('livewire.tickets',[
-            'tickets'   => SupportTicket::all()
+            'tickets'   => SupportTicket::all(),
         ]);
     }
 }
